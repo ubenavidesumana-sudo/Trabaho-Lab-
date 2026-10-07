@@ -1,0 +1,191 @@
+
+#include <iostream>
+#include <string>
+
+#include "GestorRestaurante.h"
+#include "Mesa.h"
+#include "Platillo.h"
+#include "Factura.h"
+
+using namespace std;
+
+int main() {
+
+    GestorRestaurante gestor;
+
+    int opcion;
+
+    do {
+
+        cout << endl;
+        cout << "===== GESTOR DE RESTAURANTE =====" << endl;
+        cout << "1. Abrir mesa" << endl;
+        cout << "2. Agregar platillo a una mesa" << endl;
+        cout << "3. Mostrar platillos de una mesa" << endl;
+        cout << "4. Emitir factura" << endl;
+        cout << "5. Mostrar mesas activas" << endl;
+        cout << "6. Mostrar facturas emitidas" << endl;
+        cout << "7. Salir" << endl;
+
+        cout << "Seleccione una opcion: ";
+        cin >> opcion;
+
+        if (opcion == 1) {
+
+            int numero;
+            int capacidad;
+            string mesero;
+
+            cout << "Numero de mesa: ";
+            cin >> numero;
+
+            cout << "Capacidad: ";
+            cin >> capacidad;
+
+            cin.ignore();
+
+            cout << "Mesero responsable: ";
+            getline(cin, mesero);
+
+            Mesa* mesa = gestor.abrirMesa(
+                numero,
+                capacidad,
+                mesero
+            );
+
+            if (mesa != NULL) {
+
+                cout << "Mesa abierta correctamente."
+                     << endl;
+            }
+            else {
+
+                cout << "Ya existe una mesa con ese numero."
+                     << endl;
+            }
+        }
+
+        else if (opcion == 2) {
+
+            int numeroMesa;
+            int codigo;
+            string nombre;
+            double precio;
+
+            cout << "Numero de mesa: ";
+            cin >> numeroMesa;
+
+            cout << "Codigo del platillo: ";
+            cin >> codigo;
+
+            cin.ignore();
+
+            cout << "Nombre del platillo: ";
+            getline(cin, nombre);
+
+            cout << "Precio: ";
+            cin >> precio;
+
+            Platillo* platillo =
+                new Platillo(
+                    codigo,
+                    nombre,
+                    precio
+                );
+
+            if (
+                gestor.agregarPlatilloAMesa(
+                    numeroMesa,
+                    platillo
+                )
+            ) {
+
+                cout << "Platillo agregado correctamente."
+                     << endl;
+            }
+            else {
+
+                cout << "La mesa no existe."
+                     << endl;
+
+                delete platillo;
+            }
+        }
+
+        else if (opcion == 3) {
+
+            int numeroMesa;
+
+            cout << "Numero de mesa: ";
+            cin >> numeroMesa;
+
+            gestor.imprimirPlatillosDeMesa(
+                numeroMesa
+            );
+        }
+
+        else if (opcion == 4) {
+
+            int numeroMesa;
+            int numeroFactura;
+
+            cout << "Numero de mesa: ";
+            cin >> numeroMesa;
+
+            cout << "Numero de factura: ";
+            cin >> numeroFactura;
+
+            Factura* factura =
+                gestor.emitirFactura(
+                    numeroMesa,
+                    numeroFactura
+                );
+
+            if (factura != NULL) {
+
+                cout << "Factura emitida correctamente."
+                     << endl;
+
+                cout << "Numero: "
+                     << factura->getNumeroFactura()
+                     << endl;
+
+                cout << "Total: "
+                     << factura->getTotal()
+                     << endl;
+            }
+            else {
+
+                cout << "No se pudo emitir la factura."
+                     << endl;
+            }
+        }
+
+        else if (opcion == 5) {
+
+            gestor.getMesasActivas()
+                   ->imprimirMesas();
+        }
+
+        else if (opcion == 6) {
+
+            gestor.getFacturasEmitidas()
+                   ->imprimirFacturas();
+        }
+
+        else if (opcion == 7) {
+
+            cout << "Programa finalizado."
+                 << endl;
+        }
+
+        else {
+
+            cout << "Opcion invalida."
+                 << endl;
+        }
+
+    } while (opcion != 7);
+
+    return 0;
+}
